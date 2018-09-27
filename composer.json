@@ -1,0 +1,26 @@
+{
+    "name": "agentsib/csv-reader",
+    "description": "Simple way read CSV file",
+    "keywords": ["csv"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "AgentSIB",
+            "email": "agentsib@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "AgentSIB\\CsvReader\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=5.4"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
