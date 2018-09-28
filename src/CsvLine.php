@@ -46,14 +46,7 @@ class CsvLine implements \ArrayAccess, \Iterator
      */
     public function offsetExists($offset)
     {
-        if (in_array($offset, $this->headers)) {
-            return true;
-        }
-        if (key_exists($offset, $this->values)) {
-            return true;
-        }
-
-        return false;
+        return !is_null($this->findValueIndex($offset));
     }
 
     /**
@@ -61,6 +54,27 @@ class CsvLine implements \ArrayAccess, \Iterator
      * @return string|null
      */
     public function offsetGet($offset)
+    {
+        $index = $this->findValueIndex($offset);
+
+        return !is_null($index) && isset($this->values[$index]) ? $this->values[$index] : null;
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        $index = $this->findValueIndex($offset);
+
+        if (!is_null($index) && isset($this->values[$index])) {
+            $this->values[$index] = $value;
+        }
+    }
+
+    public function offsetUnset($offset)
+    {
+        $this->offsetSet($offset, null);
+    }
+
+    private function findValueIndex($offset)
     {
         $index = null;
         if (in_array($offset, $this->headers)) {
@@ -70,17 +84,7 @@ class CsvLine implements \ArrayAccess, \Iterator
             $index = $offset;
         }
 
-        return isset($this->values[$index]) ? $this->values[$index] : null;
-    }
-
-    public function offsetSet($offset, $value)
-    {
-        @trigger_error('Read only', E_USER_WARNING);
-    }
-
-    public function offsetUnset($offset)
-    {
-        @trigger_error('Read only', E_USER_WARNING);
+        return $index;
     }
 
     /**
