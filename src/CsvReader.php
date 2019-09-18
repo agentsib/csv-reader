@@ -16,6 +16,8 @@ class CsvReader implements \Iterator
     private $escape;
     /** @var boolean */
     private $parseHeaders;
+    /** @var bool */
+    private $clearBom;
 
     /** @var string[] */
     private $current;
@@ -31,7 +33,7 @@ class CsvReader implements \Iterator
      * @param string $enclosure
      * @param string $escape
      */
-    public function __construct($handle, $headers = true, $delimiter = ',', $enclosure = '"', $escape = '\\')
+    public function __construct($handle, $headers = true, $delimiter = ',', $enclosure = '"', $escape = '\\', $clearBom = false)
     {
         if (!is_resource($handle)) {
             throw new \LogicException('Handler is not resource');
@@ -46,6 +48,7 @@ class CsvReader implements \Iterator
         $this->delimiter = $delimiter;
         $this->enclosure = $enclosure;
         $this->escape = $escape;
+        $this->clearBom = $clearBom;
 
         $this->rewind();
     }
@@ -135,6 +138,20 @@ class CsvReader implements \Iterator
      */
     protected function readLine()
     {
-        return fgetcsv($this->handle, 0, $this->delimiter, $this->enclosure, $this->escape);
+        if ($this->clearBom && $this->position < 0) {
+            $line = fgets($this->handle);
+            $line = str_getcsv($this->removeBom($line), $this->delimiter, $this->enclosure, $this->escape);
+        } else {
+            $line = fgetcsv($this->handle, 0, $this->delimiter, $this->enclosure, $this->escape);
+        }
+
+        return $line;
+    }
+
+    private function removeBom($string)
+    {
+        $bom = pack('H*', 'EFBBBF');
+
+        return preg_replace('/^' . $bom . '/', '', $string);
     }
 }
