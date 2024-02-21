@@ -1,8 +1,6 @@
 <?php
 
-
 namespace AgentSIB\CsvReader;
-
 
 class CsvLine implements \ArrayAccess, \Iterator
 {
@@ -44,6 +42,7 @@ class CsvLine implements \ArrayAccess, \Iterator
      * @param string|integer $offset
      * @return bool
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return !is_null($this->findValueIndex($offset));
@@ -53,6 +52,7 @@ class CsvLine implements \ArrayAccess, \Iterator
      * @param string|integer $offset
      * @return string|null
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         $index = $this->findValueIndex($offset);
@@ -60,6 +60,7 @@ class CsvLine implements \ArrayAccess, \Iterator
         return !is_null($index) && isset($this->values[$index]) ? $this->values[$index] : null;
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         $index = $this->findValueIndex($offset);
@@ -69,6 +70,7 @@ class CsvLine implements \ArrayAccess, \Iterator
         }
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         $this->offsetSet($offset, null);
@@ -90,14 +92,13 @@ class CsvLine implements \ArrayAccess, \Iterator
     /**
      * @return string|null
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return $this->values[$this->position];
     }
 
-    /**
-     *
-     */
+    #[\ReturnTypeWillChange]
     public function next()
     {
         $this->position++;
@@ -106,6 +107,7 @@ class CsvLine implements \ArrayAccess, \Iterator
     /**
      * @return string
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return isset($this->headers[$this->position]) ? $this->headers[$this->position] : $this->position;
@@ -114,6 +116,7 @@ class CsvLine implements \ArrayAccess, \Iterator
     /**
      * @return bool
      */
+    #[\ReturnTypeWillChange]
     public function valid()
     {
         $countHeaders = count($this->headers);
@@ -123,12 +126,9 @@ class CsvLine implements \ArrayAccess, \Iterator
         return isset($this->values[$this->position]);
     }
 
-    /**
-     *
-     */
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
         $this->position = 0;
     }
-
 }
