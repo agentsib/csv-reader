@@ -1,8 +1,6 @@
 <?php
 
-
 namespace AgentSIB\CsvReader;
-
 
 class CsvReader implements \Iterator
 {
@@ -80,16 +78,15 @@ class CsvReader implements \Iterator
     }
 
     /**
-     * @return CsvLine
+     * @return CsvLine|bool
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return $this->current ? new CsvLine($this->current, $this->headers) : false;
     }
 
-    /**
-     *
-     */
+    #[\ReturnTypeWillChange]
     public function next()
     {
         $this->current = $this->readLine();
@@ -102,6 +99,7 @@ class CsvReader implements \Iterator
     /**
      * @return int
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return $this->position;
@@ -110,14 +108,13 @@ class CsvReader implements \Iterator
     /**
      * @return bool
      */
+    #[\ReturnTypeWillChange]
     public function valid()
     {
         return $this->current !== false;
     }
 
-    /**
-     *
-     */
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
         rewind($this->handle);
